@@ -64,6 +64,7 @@ const songs = [
     audioSrc: "amour-plastique.mp3",
     new: true,
   },
+  
 ];
 
 interface ActiveAudio {
@@ -87,7 +88,7 @@ const Lesplusecoutes: React.FC = () => {
   // Initialisation de l'AudioContext
   useEffect(() => {
     if (!audioContextRef.current) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const AudioContext = window.AudioContext || window.AudioContext;
       if (AudioContext) {
         audioContextRef.current = new AudioContext();
       } else {

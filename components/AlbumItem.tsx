@@ -47,7 +47,7 @@ const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, aud
   // Effet pour initialiser l'analyseur audio et le canvas
   useEffect(() => {
     if (!audioContextRef.current) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const AudioContext = window.AudioContext || window.AudioContext;
       if (AudioContext) {
         audioContextRef.current = new AudioContext();
       } else {

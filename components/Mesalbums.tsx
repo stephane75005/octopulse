@@ -69,7 +69,6 @@ const albumsData = [
     imageSrc: "big-cheese.jpg",
     audioSrc: "the-big-cheese.mp3"
   },
-  // Ajoutez d'autres albums ici
 ];
 
 const DataAlbums = () => {
