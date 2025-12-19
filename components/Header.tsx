@@ -5,7 +5,7 @@ import Image from 'next/image'
 const Header = () => {
   return (
 
-<Box w='40%' h='100vh' bgGradient='linear(to-tr,  #1E1D1D)' />
+<Box w='30%' h='100vh' bgGradient='linear(to-tr,)' />
   )
 }
 
