@@ -7,14 +7,14 @@
 
 const Login = () => {
   return (
-    <Flex direction='row-reverse' mt='2rem' mr='4rem'>
-    <Box ml='3' >
-    <Text color='white' fontWeight='bold'>
-    Stéphane Aboukrat
-    </Text>
-    <Text color='white' fontSize='sm'>Déconnexion</Text>
-    </Box>
-    <Avatar name='Segun Adebayo' src='https://bit.ly/sage-adebayo' />
+    <Flex direction='row-reverse' mt='2rem' mr='4rem' alignItems="center">
+      <Box ml='3'>
+        <Text color='white' fontWeight='bold'>
+          Stéphane Aboukrat
+        </Text>
+        <Text color='white' fontSize='sm'>Déconnexion</Text>
+      </Box>
+      <Avatar name='Stéphane Aboukrat' src='' bg='pink.600' />
     </Flex>
   )
 }

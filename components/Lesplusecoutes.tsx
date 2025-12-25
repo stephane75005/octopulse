@@ -54,7 +54,7 @@ const songs = [
   },
   {
     id: "5",
-    artiste: "Adèle Castillon · Mattyeux",
+    artiste: "Adèle Castillon",
     album: "Amour Plastique",
     titre: "Amour Plastique",
     genre: "Pop",
@@ -163,47 +163,44 @@ const Lesplusecoutes: React.FC = () => {
           const borderColor = isPlaying ? '#853e8a' : isPaused ? 'red' : isHovered ? 'gray' : 'transparent';
 
           return (
-            <WrapItem
-              key={song.id}
-              w="220px"
-              h="350px"
-              bg="#1E1D1D"
-              borderRadius="10px"
-              p="0.6rem"
-              border={`2px solid ${borderColor}`}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              onClick={() => {
-                handlePlayOrPause(audioRef, setIsPlaying, setIsPaused);
-              }}
-              style={{
-                cursor: 'pointer',
-                transition: 'border-color 0.3s',
-                marginBottom: '0.5rem',
-              }}
-            >
-              <Flex direction="column">
-                <Image src={song.imageSrc} alt={song.titre} />
-                <Box mt="1rem">
-                  <Text color="white" fontWeight="bold">
-                    {song.titre}
-                    {song.new && (
-                      <Badge ml="1" colorScheme="green">
-                        New
-                      </Badge>
-                    )}
-                  </Text>
-                  <Text color="white" fontSize="sm">{song.artiste}</Text>
-                  <Text color="white" fontSize="xs" mt="2">
-                  {Math.floor(currentTime / 60).toString().padStart(2, '0')}:{Math.floor(currentTime % 60).toString().padStart(2, '0')} / {song.duree}
-                  </Text>
-                  <Text color="gray" fontSize="xs">
-                    Genre: {song.genre}, Année: {song.annee}
-                  </Text>
-                </Box>
-                <audio ref={audioRef} src={song.audioSrc}></audio>
-              </Flex>
-            </WrapItem>
+           <WrapItem
+  key={song.id}
+  w={["150px", "180px", "220px"]}
+  h={["290px", "305px", "350px"]}
+  bg="#1E1D1D"
+  borderRadius="10px"
+  p="0.6rem"
+  border={`2px solid ${borderColor}`}
+  onMouseEnter={() => setIsHovered(true)}
+  onMouseLeave={() => setIsHovered(false)}
+  onClick={() => {
+    handlePlayOrPause(audioRef, setIsPlaying, setIsPaused);
+  }}
+  style={{
+    cursor: 'pointer',
+    transition: 'border-color 0.3s',
+    marginBottom: '0.5rem',
+  }}
+>
+  <Flex direction="column">
+    <Image src={song.imageSrc} alt={song.titre} borderRadius="8px" objectFit="cover" w="100%" h="60%" />
+    <Box mt="1rem">
+      <Text color="white" fontWeight="bold">
+        {song.titre}
+        {song.new && <Badge ml="1" colorScheme="green">New</Badge>}
+      </Text>
+      <Text color="white" fontSize="sm">{song.artiste}</Text>
+      <Text color="white" fontSize="xs" mt="2">
+        {Math.floor(currentTime / 60).toString().padStart(2, '0')}:{Math.floor(currentTime % 60).toString().padStart(2, '0')} / {song.duree}
+      </Text>
+      <Text color="gray" fontSize="xs">
+        Genre: {song.genre}, <br />
+        Année: {song.annee}
+      </Text>
+    </Box>
+    <audio ref={audioRef} src={song.audioSrc}></audio>
+  </Flex>
+</WrapItem>
           );
         })}
       </Wrap>

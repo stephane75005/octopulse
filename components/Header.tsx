@@ -1,11 +1,12 @@
 'use client'
-import { Flex, Spacer, Text, Center, Square, Box } from '@chakra-ui/react'
-import Image from 'next/image'
+import { Box } from '@chakra-ui/react'
 
 const Header = () => {
   return (
-
-<Box w='30%' h='100vh' bgGradient='linear(to-tr,)' />
+    <Box 
+      w={["50%", null, "30%"]}  // mobile → tablette → desktop
+      h="100vh" 
+    />
   )
 }
 
