@@ -24,8 +24,12 @@ const formatTime = (t: number) => {
   return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
-const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay }) => {
-  const audioRef = useRef<HTMLAudioElement>(null);
+const AlbumItem: React.FC<Props> = ({
+  album,
+  variant = "horizontal",
+  onPlay,
+}) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -52,6 +56,7 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay }) =
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Stop l’audio actif précédent
     if (activeAudio.ref && activeAudio.ref !== audio) {
       activeAudio.ref.pause();
       activeAudio.setPlaying?.(false);
@@ -63,9 +68,8 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay }) =
         setIsPlaying(true);
         activeAudio = { ref: audio, setPlaying: setIsPlaying };
 
-        if (typeof onPlay === "function") {
-          onPlay(album.id);
-        }
+        // ✅ album.id est bien un number
+        onPlay?.(album.id);
       } else {
         audio.pause();
         setIsPlaying(false);
@@ -94,16 +98,20 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay }) =
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       w={{
-        base: variant === "vertical" ? "140px" : "310px",  // mobile
-        md: variant === "vertical" ? "182px" : "380px",   // tablette
-        lg: variant === "vertical" ? "200px" : "420px",   // desktop
+        base: variant === "vertical" ? "140px" : "310px",
+        md: variant === "vertical" ? "182px" : "380px",
+        lg: variant === "vertical" ? "200px" : "420px",
       }}
     >
       <Image
         src={album.imageSrc}
         alt={album.titre}
         w={variant === "vertical" ? "100%" : { base: "80px", md: "90px", lg: "100px" }}
-        h={variant === "vertical" ? { base: "140px", md: "160px", lg: "180px" } : { base: "80px", md: "90px", lg: "100px" }}
+        h={
+          variant === "vertical"
+            ? { base: "140px", md: "160px", lg: "180px" }
+            : { base: "80px", md: "90px", lg: "100px" }
+        }
         objectFit="cover"
         borderRadius="8px"
       />
@@ -111,9 +119,16 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay }) =
       <Box ml={variant === "vertical" ? 0 : 4} mt={variant === "vertical" ? 3 : 0}>
         <Text color="white" fontWeight="bold">
           {album.titre}
-          {album.new && <Badge ml="2" colorScheme="green">New</Badge>}
+          {album.new && (
+            <Badge ml="2" colorScheme="green">
+              New
+            </Badge>
+          )}
         </Text>
-        <Text color="white" fontSize="sm">{album.artiste}</Text>
+
+        <Text color="white" fontSize="sm">
+          {album.artiste}
+        </Text>
 
         <Text color="white" fontSize="xs">
           {formatTime(currentTime)} / {album.duree}
