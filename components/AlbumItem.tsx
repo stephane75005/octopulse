@@ -23,12 +23,13 @@ interface AlbumItemProps {
   duree: string;
 }
 
-const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, audioSrc, genre, annee, duree }) => {
+const AlbumItem: React.FC<AlbumItemProps> = ({
+  id, artiste, titre, imageSrc, audioSrc, genre, annee, duree
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,20 +37,28 @@ const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, aud
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
 
-  // Initialisation audio et canvas
   useEffect(() => {
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContextClass) return console.error("AudioContext not supported.");
+    if (typeof window === "undefined") return;
 
-    if (!audioContextRef.current) audioContextRef.current = new AudioContext();
+    const AudioContextClass =
+      window.AudioContext || (window as any).webkitAudioContext;
+
+    if (!AudioContextClass) {
+      console.error("AudioContext not supported");
+      return;
+    }
+
+    if (!audioContextRef.current) {
+      audioContextRef.current = new AudioContextClass(); // ✅ FIX
+    }
+
     const audioContext = audioContextRef.current;
 
     const analyser = audioContext.createAnalyser();
     analyser.fftSize = 256;
     analyserRef.current = analyser;
 
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength); // <-- tableau local, jamais null
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
     if (audioRef.current && !sourceRef.current) {
       const source = audioContext.createMediaElementSource(audioRef.current);
@@ -60,26 +69,24 @@ const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, aud
 
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const canvasCtx = canvas.getContext('2d');
-    if (!canvasCtx) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     const draw = () => {
       requestAnimationFrame(draw);
-
       if (!analyserRef.current) return;
 
-      // Toujours utiliser le tableau local
       analyserRef.current.getByteFrequencyData(dataArray);
 
-      canvasCtx.fillStyle = '#1E1D1D';
-      canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const barWidth = (canvas.width / dataArray.length) * 1.5;
+      const barWidth = canvas.width / dataArray.length;
       let x = 0;
+
       for (let i = 0; i < dataArray.length; i++) {
         const barHeight = dataArray[i] / 3;
-        canvasCtx.fillStyle = `rgb(${barHeight + 100},50,50)`;
-        canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        ctx.fillStyle = `rgb(${barHeight + 100},50,50)`;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth + 1;
       }
     };
@@ -87,24 +94,6 @@ const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, aud
     draw();
   }, []);
 
-  // Gestion du temps et de la durée
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const updateTime = () => setCurrentTime(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-
-    audio.addEventListener('timeupdate', updateTime);
-    audio.addEventListener('loadedmetadata', updateDuration);
-
-    return () => {
-      audio.removeEventListener('timeupdate', updateTime);
-      audio.removeEventListener('loadedmetadata', updateDuration);
-    };
-  }, []);
-
-  // Lecture / pause
   const handlePlayOrPause = () => {
     if (!audioRef.current) return;
 
@@ -112,18 +101,11 @@ const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, aud
       audioRef.current.pause();
       setIsPlaying(false);
       setIsPaused(true);
-      setTimeout(() => setIsPaused(false), 2000);
+      setTimeout(() => setIsPaused(false), 1500);
     } else {
       if (activeAudio.ref && activeAudio.ref !== audioRef.current) {
         activeAudio.ref.pause();
         activeAudio.setPlaying?.(false);
-      }
-
-      if (audioContextRef.current && !sourceRef.current && audioRef.current) {
-        const source = audioContextRef.current.createMediaElementSource(audioRef.current);
-        source.connect(analyserRef.current!);
-        analyserRef.current!.connect(audioContextRef.current.destination);
-        sourceRef.current = source;
       }
 
       audioRef.current.play();
@@ -133,35 +115,34 @@ const AlbumItem: React.FC<AlbumItemProps> = ({ id, artiste, titre, imageSrc, aud
     }
   };
 
-  const borderColor = isPlaying ? '#853e8a' : isPaused ? 'red' : isHovered ? 'gray' : 'transparent';
+  const borderColor =
+    isPlaying ? '#853e8a' : isPaused ? 'red' : isHovered ? 'gray' : 'transparent';
 
   return (
     <Flex justify="center">
-      <Wrap spacing={4} align="center">
+      <Wrap spacing={4}>
         <WrapItem
-          w={["320px", null, "380px"]}
+          w={["320px", "380px"]}
           h="150px"
           bg="#1E1D1D"
-          padding="0.6rem"
+          p="0.6rem"
           borderRadius="10px"
           border={`2px solid ${borderColor}`}
           onClick={handlePlayOrPause}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          style={{ cursor: 'pointer', transition: 'border-color 0.3s', marginBottom: '0.5rem' }}
+          cursor="pointer"
         >
-          <Flex direction="row" alignItems="center">
+          <Flex align="center">
             <Image w="90px" h="90px" src={imageSrc} alt={artiste} borderRadius="5px" />
-            <Box ml="5" pt="1rem" flex="1">
+            <Box ml="5" flex="1">
               <Text color="white" fontWeight="bold">{titre}</Text>
               <Text color="white" fontSize="sm">{artiste}</Text>
-              <Text color="white" fontSize="xs" mt="2">
-                {Math.floor(currentTime / 60)}:{Math.floor(currentTime % 60).toString().padStart(2, '0')} / {duree}
-              </Text>
               <Text color="gray" fontSize="xs">
-                Genre: {genre}, Année: {annee}
+                Genre: {genre}, <br/>
+                Année: {annee}
               </Text>
-              <canvas ref={canvasRef} width="100" height="20" style={{ borderRadius: '0px', marginTop: '5px' }} />
+              <canvas ref={canvasRef} width={100} height={20} />
             </Box>
           </Flex>
           <audio ref={audioRef} src={audioSrc} />
