@@ -1,21 +1,21 @@
 'use client';
 
 import { Wrap } from "@chakra-ui/react";
-import AlbumItem from "@/components/AlbumItem";
+import AlbumItem from "./AlbumItem";
 import { albumsData } from "@/app/data/mesalbums";
 
-const Lesplusecoutes = () => {
+const DataAlbums = () => {
   return (
     <Wrap spacing={4}>
       {albumsData.map(album => (
         <AlbumItem
           key={album.id}
           album={album}
-          variant="vertical"
+          variant="horizontal"
         />
       ))}
     </Wrap>
   );
 };
 
-export default Lesplusecoutes;
+export default DataAlbums;

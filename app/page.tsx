@@ -6,8 +6,9 @@ import { useRef, useState} from "react"
 import Header from "@components/Header";
 import Lesplusecoutes from "@components/Lesplusecoutes";
 import Login from "@components/Login";
-import Mesalbums from '@components/Mesalbums';
+import DataAlbums from "@/components/DataAlbums";
 import Sidebar from '@components/sidebar';
+import MostPlayedAlbums from '@components/MostPlayedAlbums';
 
 
 export default function Home() {
@@ -19,9 +20,9 @@ export default function Home() {
     <Flex direction='column' pl='2rem' pr='2rem'>
     <Login/>
     <Heading color='white' fontSize='4xl' pb='3rem' pt='2rem' noOfLines={1}> Les plus écoutés</Heading>
-    <Lesplusecoutes/>
+    <MostPlayedAlbums />
     <Heading color='white' fontSize='4xl' pb='3rem' pt='2rem' noOfLines={1}> Mes Albums</Heading>
-    <Mesalbums/>
+   <DataAlbums />
     </Flex>
     </Flex>
     </>

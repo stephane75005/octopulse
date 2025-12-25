@@ -1,79 +1,115 @@
 // components/Sidebar.js
 import React from "react";
-import { Box, Flex, Text, IconButton, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  IconButton,
+  Divider,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { FiMenu, FiHome, FiSearch, FiMusic, FiPlus, FiHeart, FiX } from "react-icons/fi";
-import { useDisclosure } from "@chakra-ui/react";
 
 const Sidebar = () => {
   const { isOpen, onToggle } = useDisclosure();
 
-  return (
-    <Box
-      display={{ base: isOpen ? "block" : "none", md: "block" }}
-      position="fixed"
-      top="0"
-      left="0"
-      bottom="0"
-      zIndex="100"
-      bg="gray.800"
-      p={4}
-      width={{ base: "100%", md: "250px" }}
-      boxShadow={{ base: "none", md: "0 4px 12px rgba(0, 0, 0, 0.1)" }}
-    >
-      <Box mt={100}>
-        <Box mb={4}>
-          <Flex align="center">
-            <FiHome color="white" />
-            <Text ml={3} fontWeight="medium" color="white">
-              Accueil
-            </Text>
-          </Flex>
-        </Box>
-        <Box mb={4}>
-          <Flex align="center">
-            <FiSearch color="gray" />
-            <Text ml={3} fontWeight="medium" color="gray">
-              Recherche
-            </Text>
-          </Flex>
-        </Box>
-        <Box mb={20}>
-          <Flex align="center">
-            <FiMusic color="gray" />
-            <Text ml={3} fontWeight="medium" color="gray">
-              Ma librairie
-            </Text>
-          </Flex>
-        </Box>
-        <Box mb={4}>
-          <Flex align="center">
-            <FiPlus color="gray" />
-            <Text ml={3} fontWeight="medium" color="gray">
-              Créer une playlist
-            </Text>
-          </Flex>
-        </Box>
-        <Box>
-          <Flex align="center">
-            <FiHeart color="gray" />
-            <Text ml={3} fontWeight="medium" color="gray">
-              Mes albums favoris
-            </Text>
-          </Flex>
-        </Box>
-        <Divider my={10} borderColor="gray" />
-      </Box>
+  const menuItems = [
+    { icon: FiHome, label: "Accueil", color: "white" },
+    { icon: FiSearch, label: "Recherche", color: "gray" },
+    { icon: FiMusic, label: "Ma librairie", color: "gray" },
+    { icon: FiPlus, label: "Créer une playlist", color: "gray" },
+    { icon: FiHeart, label: "Mes albums favoris", color: "gray" },
+  ];
 
+  return (
+    <>
+      {/* Bouton burger visible sur mobile et tablette */}
       <IconButton
-        display={{ base: "block", md: "none" }}
+        display={{ base: "flex", lg: "none" }}
         onClick={onToggle}
-        aria-label={isOpen ? "Fermer la barre latérale" : "Ouvrir la barre latérale"}
-        icon={isOpen ? <FiX /> : <FiMenu />}
+        aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        icon={isOpen ? <FiX size={32} color="white" /> : <FiMenu size={32} color="white" />}
+        position="fixed"
+        top="4"
+        left="4"
+        zIndex="200"
         variant="ghost"
-        colorScheme="gray"
-        _hover={{ bg: "gray.600", opacity: 0.8 }}
+        w="50px"
+        h="50px"
+        p={0}
+        alignItems="center"
+        justifyContent="center"
+        _hover={{ bg: "gray.700", borderRadius: "md" }}
       />
-    </Box>
+
+      {/* Overlay semi-transparent pour mobile/tablette */}
+      {isOpen && (
+        <Box
+          position="fixed"
+          top="0"
+          left="0"
+          width="100vw"
+          height="100vh"
+          bg="blackAlpha.400"
+          zIndex="100"
+          onClick={onToggle}
+          display={{ base: "block", lg: "none" }}
+        />
+      )}
+
+      {/* Sidebar */}
+      <Box
+        position="fixed"
+        top="0"
+        left="0"
+        bottom="0"
+        width={{ base: "full", md: "250px" }}
+        bg="gray.800"
+        p={4}
+        zIndex="150"
+        display={{ base: isOpen ? "block" : "none", lg: "block" }}
+        transition="transform 0.3s ease"
+        transform={{
+          base: isOpen ? "translateX(0)" : "translateX(-100%)",
+          lg: "translateX(0)",
+        }}
+      >
+        <Box mt={16}>
+          {menuItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <Flex
+                key={index}
+                align="center"
+                gap={3}
+                w="full"
+                h="50px"
+                px={3}
+                mb={index === 2 ? 20 : 4} // espace pour "Ma librairie"
+                borderRadius="md"
+                _hover={{
+                  bg: "gray.700",
+                  cursor: "pointer",
+                  "& svg": {
+                    transform: "scale(1.2)",
+                    filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",
+                  },
+                }}
+                transition="all 0.2s ease"
+              >
+                <Flex w="32px" h="32px" align="center" justify="center">
+                  <Icon color={item.color} size={20} />
+                </Flex>
+                <Text fontWeight="medium" color={item.color}>
+                  {item.label}
+                </Text>
+              </Flex>
+            );
+          })}
+          <Divider my={10} borderColor="gray" />
+        </Box>
+      </Box>
+    </>
   );
 };
 
