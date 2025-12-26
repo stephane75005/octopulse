@@ -100,7 +100,7 @@ const AlbumItem: React.FC<Props> = ({
       w={{
         base: variant === "vertical" ? "140px" : "310px",
         md: variant === "vertical" ? "182px" : "380px",
-        lg: variant === "vertical" ? "200px" : "420px",
+        lg: variant === "vertical" ? "200px" : "310px",
       }}
     >
       <Image
