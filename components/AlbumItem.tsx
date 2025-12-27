@@ -110,7 +110,7 @@ const AlbumItem: React.FC<Props> = ({
         <Image
           src={album.imageSrc}
           alt={album.titre}
-          w={variant === "vertical" ? "100%" : { base: "100%", md: "100px", lg: "100px" }}
+          w={variant === "vertical" ? "100%" : { base: "100px", md: "100px", lg: "100px" }}
           h={
             variant === "vertical"
               ? { base: "140px", md: "160px", lg: "180px" }
