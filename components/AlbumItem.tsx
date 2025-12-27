@@ -96,7 +96,7 @@ const AlbumItem: React.FC<Props> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       w={{
-        base: variant === "vertical" ? "140px" : "310px",
+        base: variant === "vertical" ? "155px" : "325px",
         md: variant === "vertical" ? "160px" : "330px",
         lg: variant === "vertical" ? "180px" : "310px",
       }}
@@ -110,7 +110,7 @@ const AlbumItem: React.FC<Props> = ({
         <Image
           src={album.imageSrc}
           alt={album.titre}
-          w={variant === "vertical" ? "100%" : { base: "100px", md: "100px", lg: "100px" }}
+          w={variant === "vertical" ? "100%" : { base: "100%", md: "100px", lg: "100px" }}
           h={
             variant === "vertical"
               ? { base: "140px", md: "160px", lg: "180px" }
