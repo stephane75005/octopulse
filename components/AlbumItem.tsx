@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect } from "react";
-import { Box, Flex, Text, Image, Badge } from "@chakra-ui/react";
+import { Box, Flex, Text, Image, Badge, Center } from "@chakra-ui/react";
 import { Album } from "@/app/data/mesalbums";
 
 interface Props {
@@ -56,7 +56,7 @@ const AlbumItem: React.FC<Props> = ({
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Stop l’audio actif précédent
+    // Stop audio actif précédent
     if (activeAudio.ref && activeAudio.ref !== audio) {
       activeAudio.ref.pause();
       activeAudio.setPlaying?.(false);
@@ -67,8 +67,6 @@ const AlbumItem: React.FC<Props> = ({
         await audio.play();
         setIsPlaying(true);
         activeAudio = { ref: audio, setPlaying: setIsPlaying };
-
-        // ✅ album.id est bien un number
         onPlay?.(album.id);
       } else {
         audio.pause();
@@ -99,22 +97,48 @@ const AlbumItem: React.FC<Props> = ({
       onMouseLeave={() => setIsHovered(false)}
       w={{
         base: variant === "vertical" ? "140px" : "310px",
-        md: variant === "vertical" ? "182px" : "380px",
-        lg: variant === "vertical" ? "200px" : "310px",
+        md: variant === "vertical" ? "160px" : "330px",
+        lg: variant === "vertical" ? "180px" : "310px",
+      }}
+      transition="transform 0.2s ease, box-shadow 0.2s ease"
+      _hover={{
+        transform: "scale(1.05)",
+        boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
       }}
     >
-      <Image
-        src={album.imageSrc}
-        alt={album.titre}
-        w={variant === "vertical" ? "100%" : { base: "80px", md: "90px", lg: "100px" }}
-        h={
-          variant === "vertical"
-            ? { base: "140px", md: "160px", lg: "180px" }
-            : { base: "80px", md: "90px", lg: "100px" }
-        }
-        objectFit="cover"
-        borderRadius="8px"
-      />
+      <Box position="relative">
+        <Image
+          src={album.imageSrc}
+          alt={album.titre}
+          w={variant === "vertical" ? "100%" : { base: "100px", md: "100px", lg: "100px" }}
+          h={
+            variant === "vertical"
+              ? { base: "140px", md: "160px", lg: "180px" }
+              : { base: "80px", md: "90px", lg: "100px" }
+          }
+          objectFit="cover"
+          borderRadius="8px"
+          transition="transform 0.2s ease"
+          _hover={{ transform: "scale(1.1)" }}
+        />
+
+        {/* Overlay Play/Pause */}
+        {isHovered && (
+          <Center
+            position="absolute"
+            top="0"
+            left="0"
+            w="100%"
+            h="100%"
+            bg="rgba(0,0,0,0.4)"
+            borderRadius="8px"
+            color="white"
+            fontSize="2xl"
+          >
+            {isPlaying ? "⏸" : "▶"}
+          </Center>
+        )}
+      </Box>
 
       <Box ml={variant === "vertical" ? 0 : 4} mt={variant === "vertical" ? 3 : 0}>
         <Text color="white" fontWeight="bold">

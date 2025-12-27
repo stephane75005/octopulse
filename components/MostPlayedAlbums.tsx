@@ -16,7 +16,7 @@ const MostPlayedAlbums = () => {
     const shuffledTopAlbums = [...topAlbums].sort(() => Math.random() - 0.5);
 
     // 3️⃣ Prendre les 6 premiers
-    const top6Albums = shuffledTopAlbums.slice(0, 6);
+    const top6Albums = shuffledTopAlbums.slice(0, 10);
 
     setAlbums(top6Albums);
   }, []);

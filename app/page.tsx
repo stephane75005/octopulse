@@ -17,12 +17,16 @@ export default function Home() {
     <Flex w='100%' h='100%' bgGradient='linear(to-tr, #1A202C, #2C5282)' >
     <Sidebar/>
     <Header/>
-    <Flex direction='column' pl='2rem' pr='2rem'>
+ <Flex
+  direction="column"
+  px={{ base: '1rem', sm: '1.5rem', md: '2rem', lg: '11rem' }}
+>
     <Login/>
     <Heading color='white' fontSize='4xl' pb='3rem' pt='2rem' noOfLines={1}> Les plus écoutés</Heading>
     <MostPlayedAlbums />
     <Heading color='white' fontSize='4xl' pb='3rem' pt='2rem' noOfLines={1}> Mes Albums</Heading>
    <DataAlbums />
+   <Box h="4rem" />
     </Flex>
     </Flex>
     </>
