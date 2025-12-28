@@ -83,7 +83,15 @@ export default function CreerUnePlaylistPage() {
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState<number | null>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
 
-  const [audio] = useState(new Audio());
+  // Audio côté client uniquement
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    audioRef.current = new Audio();
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current!.currentTime = 0;
+    };
+  }, []);
 
   // Toggle album
   const toggleAlbum = (albumId: number) => {
@@ -108,8 +116,8 @@ export default function CreerUnePlaylistPage() {
   const handleDeletePlaylist = (index: number) => {
     setPlaylists((prev) => prev.filter((_, i) => i !== index));
     if (currentlyPlayingIndex === index) {
-      audio.pause();
-      audio.currentTime = 0;
+      audioRef.current?.pause();
+      if (audioRef.current) audioRef.current.currentTime = 0;
       setCurrentlyPlayingIndex(null);
       setCurrentTrackIndex(0);
     }
@@ -136,13 +144,11 @@ export default function CreerUnePlaylistPage() {
     if (!playlist || playlist.albums.length === 0) return;
 
     if (currentlyPlayingIndex === playlistIndex) {
-      // Stop la playlist en cours
-      audio.pause();
-      audio.currentTime = 0;
+      audioRef.current?.pause();
+      if (audioRef.current) audioRef.current.currentTime = 0;
       setCurrentlyPlayingIndex(null);
       setCurrentTrackIndex(0);
     } else {
-      // Lancer la playlist depuis le début
       playTrack(playlistIndex, 0);
     }
   };
@@ -155,32 +161,22 @@ export default function CreerUnePlaylistPage() {
     const track = playlist.albums[trackIndex];
     if (!track) return;
 
-    // Mettre à jour l'état
     setCurrentlyPlayingIndex(playlistIndex);
     setCurrentTrackIndex(trackIndex);
 
-    // Configurer et jouer l'audio avec audioSrc
-    audio.src = track.audioSrc;
-    audio.play().catch((err) => console.log("Erreur lecture audio:", err));
-
-    // Quand la piste se termine, passer à la suivante
-    audio.onended = () => {
-      if (trackIndex < playlist.albums.length - 1) {
-        playTrack(playlistIndex, trackIndex + 1);
-      } else {
-        setCurrentlyPlayingIndex(null);
-        setCurrentTrackIndex(0);
-      }
-    };
+    if (audioRef.current) {
+      audioRef.current.src = track.audioSrc;
+      audioRef.current.play().catch((err) => console.log("Erreur lecture audio:", err));
+      audioRef.current.onended = () => {
+        if (trackIndex < playlist.albums.length - 1) {
+          playTrack(playlistIndex, trackIndex + 1);
+        } else {
+          setCurrentlyPlayingIndex(null);
+          setCurrentTrackIndex(0);
+        }
+      };
+    }
   };
-
-  // Cleanup audio on unmount
-  useEffect(() => {
-    return () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, [audio]);
 
   return (
     <Box bg="#121212" minH="100vh" p={6}>
