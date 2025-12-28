@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Flex,
@@ -21,7 +22,6 @@ type Playlist = {
   albums: Album[];
 };
 
-// Carrousel avec flèches
 const Carousel = ({ children }: { children: React.ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +75,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function CreerUnePlaylistPage() {
+  const router = useRouter();
   const [playlistName, setPlaylistName] = useState("");
   const [selectedAlbums, setSelectedAlbums] = useState<number[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -82,18 +83,8 @@ export default function CreerUnePlaylistPage() {
   const [editName, setEditName] = useState("");
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState<number | null>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Audio côté client uniquement
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  useEffect(() => {
-    audioRef.current = new Audio();
-    return () => {
-      audioRef.current?.pause();
-      audioRef.current!.currentTime = 0;
-    };
-  }, []);
-
-  // Toggle album
   const toggleAlbum = (albumId: number) => {
     setSelectedAlbums((prev) =>
       prev.includes(albumId)
@@ -104,7 +95,6 @@ export default function CreerUnePlaylistPage() {
 
   const selectedAlbumsData = albumsData.filter((a) => selectedAlbums.includes(a.id));
 
-  // Créer playlist
   const handleCreatePlaylist = () => {
     if (!playlistName || selectedAlbumsData.length === 0) return;
     setPlaylists((prev) => [...prev, { name: playlistName, albums: selectedAlbumsData }]);
@@ -112,18 +102,15 @@ export default function CreerUnePlaylistPage() {
     setSelectedAlbums([]);
   };
 
-  // Supprimer playlist
   const handleDeletePlaylist = (index: number) => {
     setPlaylists((prev) => prev.filter((_, i) => i !== index));
     if (currentlyPlayingIndex === index) {
-      audioRef.current?.pause();
-      if (audioRef.current) audioRef.current.currentTime = 0;
       setCurrentlyPlayingIndex(null);
       setCurrentTrackIndex(0);
+      audioRef.current?.pause();
     }
   };
 
-  // Edit playlist
   const handleEditPlaylist = (index: number) => {
     setEditingIndex(index);
     setEditName(playlists[index].name);
@@ -138,49 +125,60 @@ export default function CreerUnePlaylistPage() {
     setEditName("");
   };
 
-  // Play / Stop des playlists
   const handlePlayStop = (playlistIndex: number) => {
-    const playlist = playlists[playlistIndex];
-    if (!playlist || playlist.albums.length === 0) return;
-
     if (currentlyPlayingIndex === playlistIndex) {
-      audioRef.current?.pause();
-      if (audioRef.current) audioRef.current.currentTime = 0;
       setCurrentlyPlayingIndex(null);
       setCurrentTrackIndex(0);
+      audioRef.current?.pause();
     } else {
-      playTrack(playlistIndex, 0);
+      setCurrentlyPlayingIndex(playlistIndex);
+      setCurrentTrackIndex(0);
+
+      const playlist = playlists[playlistIndex];
+      if (playlist && playlist.albums.length > 0 && audioRef.current) {
+        audioRef.current.src = playlist.albums[0].audioSrc;
+        audioRef.current
+          .play()
+          .catch((err) => console.log("Erreur lecture audio :", err));
+      }
     }
   };
 
-  // Fonction pour jouer une piste spécifique
-  const playTrack = (playlistIndex: number, trackIndex: number) => {
-    const playlist = playlists[playlistIndex];
-    if (!playlist) return;
+  useEffect(() => {
+    if (!audioRef.current || currentlyPlayingIndex === null) return;
+    const playlist = playlists[currentlyPlayingIndex];
+    if (!playlist || playlist.albums.length === 0) return;
 
-    const track = playlist.albums[trackIndex];
-    if (!track) return;
+    const handleEnded = () => {
+      if (currentTrackIndex < playlist.albums.length - 1) {
+        const nextTrack = playlist.albums[currentTrackIndex + 1];
+        audioRef.current!.src = nextTrack.audioSrc;
+        audioRef.current!.play().catch((err) => console.log("Erreur audio :", err));
+        setCurrentTrackIndex((prev) => prev + 1);
+      } else {
+        setCurrentlyPlayingIndex(null);
+        setCurrentTrackIndex(0);
+      }
+    };
 
-    setCurrentlyPlayingIndex(playlistIndex);
-    setCurrentTrackIndex(trackIndex);
-
-    if (audioRef.current) {
-      audioRef.current.src = track.audioSrc;
-      audioRef.current.play().catch((err) => console.log("Erreur lecture audio:", err));
-      audioRef.current.onended = () => {
-        if (trackIndex < playlist.albums.length - 1) {
-          playTrack(playlistIndex, trackIndex + 1);
-        } else {
-          setCurrentlyPlayingIndex(null);
-          setCurrentTrackIndex(0);
-        }
-      };
-    }
-  };
+    audioRef.current.addEventListener("ended", handleEnded);
+    return () => {
+      audioRef.current?.removeEventListener("ended", handleEnded);
+    };
+  }, [currentlyPlayingIndex, currentTrackIndex, playlists]);
 
   return (
     <Box bg="#121212" minH="100vh" p={6}>
-      <Heading color="white" mb={6}>Créer une playlist</Heading>
+      <Flex align="center" mb={6} gap={2}>
+        <IconButton
+          aria-label="Retour Home"
+          icon={<ChevronLeftIcon />}
+          colorScheme="purple"
+          size="sm"
+          onClick={() => router.push("/")}
+        />
+        <Heading color="white">Créer une playlist</Heading>
+      </Flex>
 
       <Input
         placeholder="Nom de la playlist"
@@ -240,17 +238,35 @@ export default function CreerUnePlaylistPage() {
             {playlists.map((pl, index) => (
               <Box key={index} p={3} bg={currentlyPlayingIndex === index ? "#2D1B52" : "#1A1A1A"} borderRadius="10px">
                 <Flex justify="space-between" align="center" mb={2}>
-                  {editingIndex === index ? (
-                    <Flex gap={2}>
-                      <Input value={editName} onChange={(e) => setEditName(e.target.value)} bg="#121212" color="white" size="sm" />
-                      <Button size="sm" colorScheme="green" onClick={handleSaveEdit}>Sauvegarder</Button>
-                    </Flex>
-                  ) : (
-                    <Heading size="xs" color="white">{pl.name}</Heading>
+                  {editingIndex === index && (
+                    <Input
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      bg="#121212"
+                      color="white"
+                      size="sm"
+                      mr={2}
+                      flex="1"
+                    />
                   )}
+                  <Flex gap={1} align="center">
+                    {editingIndex === index ? (
+                      <Button
+                        size="xs"
+                        colorScheme="purple"
+                        onClick={handleSaveEdit}
+                      >
+                        Sauvegarder
+                      </Button>
+                    ) : (
+                      <Heading size="xs" color="white">{pl.name}</Heading>
+                    )}
 
-                  <Flex gap={1}>
-                    <Button size="xs" colorScheme={currentlyPlayingIndex === index ? "red" : "green"} onClick={() => handlePlayStop(index)}>
+                    <Button
+                      size="xs"
+                      colorScheme={currentlyPlayingIndex === index ? "red" : "green"}
+                      onClick={() => handlePlayStop(index)}
+                    >
                       {currentlyPlayingIndex === index ? "Stop" : "Play"}
                     </Button>
                     <IconButton aria-label="Éditer" icon={<EditIcon />} size="xs" onClick={() => handleEditPlaylist(index)} />
@@ -277,6 +293,9 @@ export default function CreerUnePlaylistPage() {
           </VStack>
         </Box>
       )}
+
+      {/* Élément audio */}
+      <audio ref={audioRef} />
     </Box>
   );
 }

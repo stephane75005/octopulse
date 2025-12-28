@@ -159,5 +159,4 @@ export const albumsData: Album[] = [
     audioSrc: "/audio/lola-young.mp3",
     plays: 108,
   },
-  
 ];
