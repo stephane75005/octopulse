@@ -124,7 +124,7 @@ export const albumsData: Album[] = [
     plays: 107,
   },
         {
-    id: 9,
+    id: 10,
     artiste: "Winta",
     album: "Winta",
     titre: "First Move",
@@ -136,7 +136,7 @@ export const albumsData: Album[] = [
     plays: 107,
   },
   {
-  id: 10,
+  id: 11,
     artiste: "Sade",
     album: "Lovers Rock",
     titre: "King of Sorrow",
@@ -148,7 +148,7 @@ export const albumsData: Album[] = [
     plays: 108,
   },
    {
-  id: 10,
+  id: 12,
     artiste: "Lola Young",
     album: "This Wasn't Meant for You Anyway",
     titre: "Messy",
@@ -159,4 +159,5 @@ export const albumsData: Album[] = [
     audioSrc: "/audio/lola-young.mp3",
     plays: 108,
   },
+  
 ];

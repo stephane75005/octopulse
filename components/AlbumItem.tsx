@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, ReactNode } from "react";
 import { Box, Flex, Text, Image, Badge, Center } from "@chakra-ui/react";
 import { Album } from "@/app/data/mesalbums";
 
@@ -8,6 +8,7 @@ interface Props {
   album: Album;
   variant?: "horizontal" | "vertical";
   onPlay?: (albumId: number) => void;
+  children?: ReactNode; // <-- ajouté pour overlay ou autres éléments
 }
 
 interface ActiveAudio {
@@ -28,6 +29,7 @@ const AlbumItem: React.FC<Props> = ({
   album,
   variant = "horizontal",
   onPlay,
+  children, // <-- récupéré ici
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -56,7 +58,6 @@ const AlbumItem: React.FC<Props> = ({
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Stop audio actif précédent
     if (activeAudio.ref && activeAudio.ref !== audio) {
       activeAudio.ref.pause();
       activeAudio.setPlaying?.(false);
@@ -138,6 +139,9 @@ const AlbumItem: React.FC<Props> = ({
             {isPlaying ? "⏸" : "▶"}
           </Center>
         )}
+
+        {/* Enfants optionnels */}
+        {children}
       </Box>
 
       <Box ml={variant === "vertical" ? 0 : 4} mt={variant === "vertical" ? 3 : 0}>

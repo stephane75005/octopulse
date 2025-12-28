@@ -1,29 +1,34 @@
-// components/Sidebar.js
+"use client";
+
 import React from "react";
-import {
-  Box,
-  Flex,
-  Text,
-  IconButton,
-  Divider,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, IconButton, Divider, useDisclosure } from "@chakra-ui/react";
+import { IconType } from "react-icons";
 import { FiMenu, FiHome, FiSearch, FiMusic, FiPlus, FiHeart, FiX } from "react-icons/fi";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-const Sidebar = () => {
+interface MenuItem {
+  icon: IconType;
+  label: string;
+  path: string;
+}
+
+const Sidebar: React.FC = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const pathname = usePathname();
 
-  const menuItems = [
-    { icon: FiHome, label: "Accueil", color: "white" },
-    { icon: FiSearch, label: "Recherche", color: "gray" },
-    { icon: FiMusic, label: "Ma librairie", color: "gray" },
-    { icon: FiPlus, label: "Créer une playlist", color: "gray" },
-    { icon: FiHeart, label: "Mes albums favoris", color: "gray" },
-  ];
+const menuItems: MenuItem[] = [
+  { icon: FiHome, label: "Accueil", path: "/" },
+  { icon: FiSearch, label: "Recherche", path: "/Recherche" },
+  { icon: FiMusic, label: "Ma librairie", path: "/MaLibrairie" },
+  { icon: FiPlus, label: "Créer une playlist", path: "/CreerUnePlaylist" },
+  { icon: FiHeart, label: "Mes albums favoris", path: "/MesAlbumsFavoris" },
+];
+
 
   return (
     <>
-      {/* Bouton burger visible sur mobile et tablette */}
+      {/* Bouton burger */}
       <IconButton
         display={{ base: "flex", lg: "none" }}
         onClick={onToggle}
@@ -42,7 +47,7 @@ const Sidebar = () => {
         _hover={{ bg: "gray.700", borderRadius: "md" }}
       />
 
-      {/* Overlay semi-transparent pour mobile/tablette */}
+      {/* Overlay mobile */}
       {isOpen && (
         <Box
           position="fixed"
@@ -69,44 +74,46 @@ const Sidebar = () => {
         zIndex="150"
         display={{ base: isOpen ? "block" : "none", lg: "block" }}
         transition="transform 0.3s ease"
-        transform={{
-          base: isOpen ? "translateX(0)" : "translateX(-100%)",
-          lg: "translateX(0)",
-        }}
+        transform={{ base: isOpen ? "translateX(0)" : "translateX(-100%)", lg: "translateX(0)" }}
       >
         <Box mt={16}>
           {menuItems.map((item, index) => {
             const Icon = item.icon;
+            const isActive = pathname === item.path;
+
             return (
-              <Flex
-                key={index}
-                align="center"
-                gap={3}
-                w="full"
-                h="50px"
-                px={3}
-                mb={index === 2 ? 20 : 4} // espace pour "Ma librairie"
-                borderRadius="md"
-                _hover={{
-                  bg: "gray.700",
-                  cursor: "pointer",
-                  "& svg": {
-                    transform: "scale(1.2)",
-                    filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",
-                  },
-                }}
-                transition="all 0.2s ease"
-              >
-                <Flex w="32px" h="32px" align="center" justify="center">
-                  <Icon color={item.color} size={20} />
+              <Link href={item.path} key={index} passHref>
+                <Flex
+                  align="center"
+                  gap={3}
+                  w="full"
+                  h="50px"
+                  px={3}
+                  mb={index === 2 ? 20 : 4}
+                  borderRadius="md"
+                  bg={isActive ? "gray.700" : "transparent"}
+                  _hover={{
+                    bg: "gray.700",
+                    cursor: "pointer",
+                    "& svg": {
+                      transform: "scale(1.2)",
+                      filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",
+                    },
+                  }}
+                  transition="all 0.2s ease"
+                >
+                  <Flex w="32px" h="32px" align="center" justify="center">
+                    {/* Icône toujours blanche */}
+                    <Icon color="white" size={24} />
+                  </Flex>
+                  <Text fontWeight="medium" color={isActive ? "white" : "gray.200"}>
+                    {item.label}
+                  </Text>
                 </Flex>
-                <Text fontWeight="medium" color={item.color}>
-                  {item.label}
-                </Text>
-              </Flex>
+              </Link>
             );
           })}
-          <Divider my={10} borderColor="gray" />
+          <Divider my={10} borderColor="gray.600" />
         </Box>
       </Box>
     </>
