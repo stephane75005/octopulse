@@ -199,7 +199,9 @@ export default function CreerUnePlaylistPage() {
           size="sm"
           onClick={() => router.push("/")}
         />
-        <Heading color="white">Créer une playlist</Heading>
+         <Text fontSize="2xl" fontWeight="bold" color="white">
+          Créer une playlist
+        </Text>
       </Flex>
 
       <Input

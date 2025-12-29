@@ -52,7 +52,7 @@ export default function LibrairiePage() {
           onClick={() => router.push("/")}
         />
         <Text fontSize="2xl" fontWeight="bold" color="white">
-          Librairie
+          Ma librairie
         </Text>
       </Flex>
 

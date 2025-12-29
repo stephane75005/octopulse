@@ -6,6 +6,7 @@ import { IconType } from "react-icons";
 import { FiMenu, FiHome, FiSearch, FiMusic, FiPlus, FiHeart, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 interface MenuItem {
   icon: IconType;
@@ -17,14 +18,13 @@ const Sidebar: React.FC = () => {
   const { isOpen, onToggle } = useDisclosure();
   const pathname = usePathname();
 
-const menuItems: MenuItem[] = [
-  { icon: FiHome, label: "Accueil", path: "/" },
-  { icon: FiSearch, label: "Recherche", path: "/Recherche" },
-  { icon: FiMusic, label: "Ma librairie", path: "/MaLibrairie" },
-  { icon: FiPlus, label: "Créer une playlist", path: "/CreerUnePlaylist" },
-  { icon: FiHeart, label: "Mes albums favoris", path: "/MesAlbumsFavoris" },
-];
-
+  const menuItems: MenuItem[] = [
+    { icon: FiHome, label: "Accueil", path: "/" },
+    { icon: FiSearch, label: "Recherche", path: "/Recherche" },
+    { icon: FiMusic, label: "Ma librairie", path: "/MaLibrairie" },
+    { icon: FiPlus, label: "Créer une playlist", path: "/CreerUnePlaylist" },
+    { icon: FiHeart, label: "Mes albums favoris", path: "/MesAlbumsFavoris" },
+  ];
 
   return (
     <>
@@ -76,45 +76,75 @@ const menuItems: MenuItem[] = [
         transition="transform 0.3s ease"
         transform={{ base: isOpen ? "translateX(0)" : "translateX(-100%)", lg: "translateX(0)" }}
       >
-        <Box mt={16}>
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.path;
+        <Box mt={20} display="flex" flexDirection="column" alignItems="center">
+          {/* Logo avec petit bounce + glow */}
+          <Link href="/">
+            <Box
+              mb={12}
+              _hover={{
+                transform: "scale(1.1)", // léger zoom au hover
+              }}
+              transition="all 0.3s ease"
+              animation="bounceLogo 5s infinite"
+              style={{ display: "inline-block", filter: "drop-shadow(0 0 4px rgba(133,62,138,0.6))" }}
+            >
+              <Image
+                src="/images/logo.png"
+                alt="Logo"
+                width={60}
+                height={60}
+                style={{ objectFit: "contain" }}
+              />
+            </Box>
+          </Link>
 
-            return (
-              <Link href={item.path} key={index} passHref>
-                <Flex
-                  align="center"
-                  gap={3}
-                  w="full"
-                  h="50px"
-                  px={3}
-                  mb={index === 2 ? 20 : 4}
-                  borderRadius="md"
-                  bg={isActive ? "gray.700" : "transparent"}
-                  _hover={{
-                    bg: "gray.700",
-                    cursor: "pointer",
-                    "& svg": {
-                      transform: "scale(1.2)",
-                      filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",
-                    },
-                  }}
-                  transition="all 0.2s ease"
-                >
-                  <Flex w="32px" h="32px" align="center" justify="center">
-                    {/* Icône toujours blanche */}
-                    <Icon color="white" size={24} />
+          {/* Menu items */}
+          <Box w="full">
+            {menuItems.map((item, index) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.path;
+
+              return (
+                <Link href={item.path} key={index} passHref>
+                  <Flex
+                    align="center"
+                    gap={3}
+                    w="full"
+                    h="50px"
+                    px={3}
+                    mb={index === 2 ? 20 : 4}
+                    borderRadius="md"
+                    bg={isActive ? "gray.700" : "transparent"}
+                    _hover={{
+                      bg: "gray.700",
+                      "& svg": {
+                        transform: "scale(1.2)",
+                        filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",
+                      },
+                    }}
+                    transition="all 0.2s ease"
+                  >
+                    <Flex w="32px" h="32px" align="center" justify="center">
+                      <Icon color="white" size={24} />
+                    </Flex>
+                    <Text fontWeight="medium" color={isActive ? "white" : "gray.200"}>
+                      {item.label}
+                    </Text>
                   </Flex>
-                  <Text fontWeight="medium" color={isActive ? "white" : "gray.200"}>
-                    {item.label}
-                  </Text>
-                </Flex>
-              </Link>
-            );
-          })}
-          <Divider my={10} borderColor="gray.600" />
+                </Link>
+              );
+            })}
+            <Divider my={10} borderColor="gray.600" />
+          </Box>
         </Box>
+
+        {/* Animation keyframes */}
+        <style jsx>{`
+          @keyframes bounceLogo {
+            0%, 80%, 100% { transform: translateY(0); filter: drop-shadow(0 0 4px rgba(133,62,138,0.6)); }
+            40% { transform: translateY(-10px); filter: drop-shadow(0 0 8px rgba(133,62,138,0.9)); }
+          }
+        `}</style>
       </Box>
     </>
   );

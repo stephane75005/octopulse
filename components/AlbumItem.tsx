@@ -8,7 +8,7 @@ interface Props {
   album: Album;
   variant?: "horizontal" | "vertical";
   onPlay?: (albumId: number) => void;
-  children?: ReactNode; // <-- ajouté pour overlay ou autres éléments
+  children?: ReactNode; // overlay ou autres éléments
 }
 
 interface ActiveAudio {
@@ -25,12 +25,40 @@ const formatTime = (t: number) => {
   return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 };
 
-const AlbumItem: React.FC<Props> = ({
-  album,
-  variant = "horizontal",
-  onPlay,
-  children, // <-- récupéré ici
-}) => {
+// === Equalizer 3 bandes placé en haut à gauche ===
+const EqualizerBars: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => {
+  return (
+    <Flex
+      position="absolute"
+      top="5px"     // en haut
+      left="5px"    // à gauche
+      direction="row"
+      gap="2px"
+      align="flex-end"
+      h="25px"
+      w="20px"
+    >
+      {[0, 1, 2].map((i) => (
+        <Box
+          key={i}
+          w="4px"
+          bg="#853e8a"
+          borderRadius="2px"
+          animation={isPlaying ? `bounce 0.6s ${i * 0.1}s infinite alternate` : "none"}
+        />
+      ))}
+      <style jsx>{`
+        @keyframes bounce {
+          0% { height: 4px; }
+          50% { height: 20px; }
+          100% { height: 4px; }
+        }
+      `}</style>
+    </Flex>
+  );
+};
+
+const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, children }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -80,9 +108,7 @@ const AlbumItem: React.FC<Props> = ({
     }
   };
 
-  const borderColor =
-    isPlaying ? "#853e8a" : isPaused ? "red" : isHovered ? "gray" : "transparent";
-
+  const borderColor = isPlaying ? "#853e8a" : isPaused ? "red" : isHovered ? "gray" : "transparent";
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
@@ -102,10 +128,7 @@ const AlbumItem: React.FC<Props> = ({
         lg: variant === "vertical" ? "180px" : "310px",
       }}
       transition="transform 0.2s ease, box-shadow 0.2s ease"
-      _hover={{
-        transform: "scale(1.05)",
-        boxShadow: "0 10px 20px rgba(0,0,0,0.3)",
-      }}
+      _hover={{ transform: "scale(1.05)", boxShadow: "0 10px 20px rgba(0,0,0,0.3)" }}
     >
       <Box position="relative">
         <Image
@@ -140,6 +163,9 @@ const AlbumItem: React.FC<Props> = ({
           </Center>
         )}
 
+        {/* Equalizer en haut à gauche */}
+        <EqualizerBars isPlaying={isPlaying} />
+
         {/* Enfants optionnels */}
         {children}
       </Box>
@@ -153,11 +179,9 @@ const AlbumItem: React.FC<Props> = ({
             </Badge>
           )}
         </Text>
-
         <Text color="white" fontSize="sm">
           {album.artiste}
         </Text>
-
         <Text color="white" fontSize="xs">
           {formatTime(currentTime)} / {album.duree}
         </Text>
