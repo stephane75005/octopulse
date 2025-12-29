@@ -12,6 +12,7 @@ import {
   Text,
   Checkbox,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import AlbumItem from "@/components/AlbumItem";
@@ -76,6 +77,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
 
 export default function CreerUnePlaylistPage() {
   const router = useRouter();
+  const toast = useToast(); // 🔹 useToast pour notification
   const [playlistName, setPlaylistName] = useState("");
   const [selectedAlbums, setSelectedAlbums] = useState<number[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -84,6 +86,7 @@ export default function CreerUnePlaylistPage() {
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState<number | null>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [lastPlaylistsCount, setLastPlaylistsCount] = useState(0); // 🔹 pour suivre les ajouts
 
   const toggleAlbum = (albumId: number) => {
     setSelectedAlbums((prev) =>
@@ -166,6 +169,25 @@ export default function CreerUnePlaylistPage() {
       audioRef.current?.removeEventListener("ended", handleEnded);
     };
   }, [currentlyPlayingIndex, currentTrackIndex, playlists]);
+
+  // 🔹 Notification 3 sec après la création d'une playlist
+  useEffect(() => {
+    if (playlists.length > lastPlaylistsCount) {
+      const timeout = setTimeout(() => {
+        toast({
+          title: "Playlist créée",
+          description: "Votre playlist a été créée avec succès.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+        setLastPlaylistsCount(playlists.length);
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [playlists, lastPlaylistsCount, toast]);
 
   return (
     <Box bg="#121212" minH="100vh" p={6}>
@@ -294,7 +316,6 @@ export default function CreerUnePlaylistPage() {
         </Box>
       )}
 
-      {/* Élément audio */}
       <audio ref={audioRef} />
     </Box>
   );

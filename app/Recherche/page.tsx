@@ -10,6 +10,7 @@ import {
   Flex,
   IconButton,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FiSearch, FiChevronLeft } from "react-icons/fi";
@@ -24,14 +25,20 @@ const normalize = (str: string) =>
 
 export default function RecherchePage() {
   const router = useRouter();
+  const toast = useToast();
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<number[]>([]);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [lastFavoritesCount, setLastFavoritesCount] = useState(0);
 
   // Chargement des favoris depuis localStorage
   useEffect(() => {
     const stored = localStorage.getItem("favorites");
-    if (stored) setFavorites(JSON.parse(stored));
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      setFavorites(parsed);
+      setLastFavoritesCount(parsed.length);
+    }
   }, []);
 
   // Sauvegarde des favoris dans localStorage
@@ -44,6 +51,25 @@ export default function RecherchePage() {
       prev.includes(id) ? prev.filter(fav => fav !== id) : [...prev, id]
     );
   };
+
+  // Notification 5 sec après le dernier ajout
+  useEffect(() => {
+    if (favorites.length > lastFavoritesCount) {
+      const timeout = setTimeout(() => {
+        toast({
+          title: "Favoris mis à jour",
+          description: "Les albums que vous avez aimés ont été ajoutés à vos favoris.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+        setLastFavoritesCount(favorites.length);
+      }, 5000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [favorites, lastFavoritesCount, toast]);
 
   // Filtrage des albums
   const filteredAlbums = useMemo(() => {
@@ -67,7 +93,7 @@ export default function RecherchePage() {
           aria-label="Retour Home"
           icon={<FiChevronLeft />}
           colorScheme="purple"
-          size="sm"       // bouton compact comme sur Favoris
+          size="sm"
           onClick={() => router.push("/")}
         />
         <Text fontSize="2xl" fontWeight="bold" color="white">
