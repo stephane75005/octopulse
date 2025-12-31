@@ -4,6 +4,7 @@ import React from "react";
 import { Box, Flex, Text, IconButton, Divider, useDisclosure } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import { FiMenu, FiHome, FiSearch, FiMusic, FiPlus, FiHeart, FiX } from "react-icons/fi";
+import { TbMicrophone2 } from "react-icons/tb"; // 👈 nouvel import
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -22,6 +23,7 @@ const Sidebar: React.FC = () => {
     { icon: FiHome, label: "Accueil", path: "/" },
     { icon: FiSearch, label: "Recherche", path: "/Recherche" },
     { icon: FiMusic, label: "Ma librairie", path: "/MaLibrairie" },
+    { icon: TbMicrophone2, label: "Karaoké", path: "/Karaoke" }, // 🎤 icône micro
     { icon: FiPlus, label: "Créer une playlist", path: "/CreerUnePlaylist" },
     { icon: FiHeart, label: "Mes albums favoris", path: "/MesAlbumsFavoris" },
   ];
@@ -77,13 +79,11 @@ const Sidebar: React.FC = () => {
         transform={{ base: isOpen ? "translateX(0)" : "translateX(-100%)", lg: "translateX(0)" }}
       >
         <Box mt={20} display="flex" flexDirection="column" alignItems="center">
-          {/* Logo avec petit bounce + glow */}
+          {/* Logo */}
           <Link href="/">
             <Box
               mb={12}
-              _hover={{
-                transform: "scale(1.1)", // léger zoom au hover
-              }}
+              _hover={{ transform: "scale(1.1)" }}
               transition="all 0.3s ease"
               animation="bounceLogo 5s infinite"
               style={{ display: "inline-block", filter: "drop-shadow(0 0 4px rgba(133,62,138,0.6))" }}
@@ -112,7 +112,7 @@ const Sidebar: React.FC = () => {
                     w="full"
                     h="50px"
                     px={3}
-                    mb={index === 2 ? 20 : 4}
+                    mb={index === 3 ? 20 : 4}
                     borderRadius="md"
                     bg={isActive ? "gray.700" : "transparent"}
                     _hover={{

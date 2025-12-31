@@ -162,8 +162,8 @@ export const albumsData: Album[] = [
   {
   id: 13,
   artiste: "Jackie Brown",
-  album: "Didn't I Blow Your Mind",
-  titre: "Didn't I Blow Your Mind",
+  album: "Didn't I Blow...",
+  titre: "Didn't I Blow...",
   genre: "R&B",
   annee: 1997,
   duree: "4:12",
