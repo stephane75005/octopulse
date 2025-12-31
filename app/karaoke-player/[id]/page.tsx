@@ -10,15 +10,9 @@ import {
   IconButton,
   Center,
   VStack,
-  HStack,
 } from "@chakra-ui/react";
 import { FiChevronLeft } from "react-icons/fi";
-import {
-  TbPlayerPlay,
-  TbPlayerPause,
-  TbPlayerSkipBack,
-  TbPlayerSkipForward,
-} from "react-icons/tb";
+import { TbPlayerPlay, TbPlayerPause } from "react-icons/tb";
 import { albumsData, Album, LyricLine, Word } from "@/app/data/karaoke";
 
 export default function KaraokePlayerPage() {
@@ -39,14 +33,12 @@ export default function KaraokePlayerPage() {
   const lyricsContainerRef = useRef<HTMLDivElement | null>(null);
   const lineRefs = useRef<(HTMLDivElement | null)[]>([]);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
   const [isUserScrolling, setIsUserScrolling] = useState(false);
 
   const setLineRef = (index: number) => (el: HTMLDivElement | null) => {
     lineRefs.current[index] = el;
   };
 
-  // Charger l'album
   useEffect(() => {
     if (albumId !== null) {
       const index = albumsData.findIndex(a => a.id === albumId);
@@ -57,7 +49,6 @@ export default function KaraokePlayerPage() {
     }
   }, [albumId]);
 
-  // Charger paroles LRC
   useEffect(() => {
     async function loadLyrics() {
       if (!album || !album.lrcSrc) return;
@@ -73,7 +64,6 @@ export default function KaraokePlayerPage() {
     loadLyrics();
   }, [album]);
 
-  // Parse LRC en LyricLine[]
   const parseLRC = (lrcText: string): LyricLine[] => {
     const lines: LyricLine[] = [];
     const lrcLines = lrcText.split(/\r?\n/);
@@ -105,7 +95,6 @@ export default function KaraokePlayerPage() {
     return lines;
   };
 
-  // Mise à jour du compteur et ligne active
   const updateProgress = () => {
     if (audioRef.current && !isDragging) {
       setProgress(audioRef.current.currentTime);
@@ -120,7 +109,6 @@ export default function KaraokePlayerPage() {
     animationRef.current = requestAnimationFrame(updateProgress);
   };
 
-  // Animation loop
   useEffect(() => {
     if (isPlaying) animationRef.current = requestAnimationFrame(updateProgress);
     else if (animationRef.current) {
@@ -132,7 +120,6 @@ export default function KaraokePlayerPage() {
     };
   }, [isPlaying, isDragging, album]);
 
-  // Scroll automatique centré mais stoppable
   useEffect(() => {
     if (isUserScrolling) return;
     const currentLine = lineRefs.current[currentLyricIndex];
@@ -141,7 +128,6 @@ export default function KaraokePlayerPage() {
     }
   }, [currentLyricIndex, isUserScrolling]);
 
-  // Détection du scroll manuel
   useEffect(() => {
     const container = lyricsContainerRef.current;
     if (!container) return;
@@ -178,64 +164,35 @@ export default function KaraokePlayerPage() {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const playAlbumAtIndex = (index: number) => {
-    const nextAlbum = albumsData[index];
-    setAlbum(nextAlbum);
-    setAlbumIndex(index);
-    setProgress(0);
-    setDuration(0);
-    setIsPlaying(false);
-    setCurrentLyricIndex(0);
-    setTimeout(() => {
-      audioRef.current?.load();
-      audioRef.current?.play();
-      setIsPlaying(true);
-    }, 50);
-  };
-
-  const prevAlbum = () => {
-    if (albumIndex === null) return;
-    const newIndex = (albumIndex - 1 + albumsData.length) % albumsData.length;
-    playAlbumAtIndex(newIndex);
-  };
-
-  const nextAlbum = () => {
-    if (albumIndex === null) return;
-    const newIndex = (albumIndex + 1) % albumsData.length;
-    playAlbumAtIndex(newIndex);
-  };
-
-  const handleProgressMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setIsDragging(true);
-    moveProgress(e);
-    window.addEventListener("mousemove", moveProgress as any);
-    window.addEventListener("mouseup", handleMouseUp);
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    window.removeEventListener("mousemove", moveProgress as any);
-    window.removeEventListener("mouseup", handleMouseUp);
-  };
-
-  const moveProgress = (e: MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!audioRef.current) return;
-    const progressBar = document.getElementById("progress-bar");
-    if (!progressBar) return;
-    const rect = progressBar.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    let newTime = (clickX / rect.width) * (audioRef.current.duration || 0);
-    newTime = Math.max(0, Math.min(newTime, audioRef.current.duration || 0));
-    audioRef.current.currentTime = newTime;
-    setProgress(newTime);
-  };
-
   if (!album) return <Box p={6} color="white" bg="#121212" minH="100vh">Aucun album trouvé</Box>;
 
   const lyrics: LyricLine[] = album?.lyrics ?? [];
 
   return (
     <Box minH="100vh" w="full" position="relative" overflow="hidden" bg="#121212" color="white">
+      {/* Arrière-plan flou et animé */}
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        w="full"
+        h="full"
+        backgroundImage={`url(${album.imageSrc})`}
+        backgroundSize="cover"
+        backgroundPosition="center"
+        filter="blur(25px) brightness(0.5)"
+        transform="scale(1.1)"
+        animation="zoomInOut 20s ease-in-out infinite alternate"
+        zIndex={0}
+      />
+      <style jsx>{`
+        @keyframes zoomInOut {
+          0% { transform: scale(1.05); }
+          100% { transform: scale(1.15); }
+        }
+      `}</style>
+
+      {/* Contenu principal */}
       <Box position="relative" zIndex={1} p={6}>
         <Flex align="center" mb={6} gap={4}>
           <IconButton aria-label="Retour" icon={<FiChevronLeft />} colorScheme="purple" size="sm" onClick={() => router.push("/Karaoke")} />
@@ -252,16 +209,33 @@ export default function KaraokePlayerPage() {
                 position="absolute" top="50%" left="50%" transform="translate(-50%, -50%)"
                 colorScheme="purple" borderRadius="full" size="lg" onClick={togglePlay} bg="rgba(0,0,0,0.6)"
               />
-              <HStack position="absolute" bottom={4} left="50%" transform="translateX(-50%)" spacing={6}>
-                <IconButton aria-label="Précédent" icon={<TbPlayerSkipBack size={28} />} colorScheme="purple" borderRadius="full" onClick={prevAlbum} bg="rgba(0,0,0,0.6)" />
-                <IconButton aria-label="Suivant" icon={<TbPlayerSkipForward size={28} />} colorScheme="purple" borderRadius="full" onClick={nextAlbum} bg="rgba(0,0,0,0.6)" />
-              </HStack>
             </Box>
 
             <VStack align="start" spacing={4} bg="rgba(0,0,0,0.5)" p={6} borderRadius="xl" w={{ base: "full", md: "auto" }}>
               <Text fontSize={{ base: "xl", md: "3xl" }} fontWeight="bold">{album.album}</Text>
 
-              <Box id="progress-bar" w="full" mt={2} h="8px" bg="gray.700" borderRadius="md" cursor="pointer" onMouseDown={handleProgressMouseDown}>
+              <Box id="progress-bar" w="full" mt={2} h="8px" bg="gray.700" borderRadius="md" cursor="pointer" onMouseDown={(e) => {
+                setIsDragging(true);
+                const moveProgress = (e: MouseEvent | React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+                  if (!audioRef.current) return;
+                  const progressBar = document.getElementById("progress-bar");
+                  if (!progressBar) return;
+                  const rect = progressBar.getBoundingClientRect();
+                  const clickX = e.clientX - rect.left;
+                  let newTime = (clickX / rect.width) * (audioRef.current.duration || 0);
+                  newTime = Math.max(0, Math.min(newTime, audioRef.current.duration || 0));
+                  audioRef.current.currentTime = newTime;
+                  setProgress(newTime);
+                };
+                moveProgress(e);
+                const handleMouseUp = () => {
+                  setIsDragging(false);
+                  window.removeEventListener("mousemove", moveProgress as any);
+                  window.removeEventListener("mouseup", handleMouseUp);
+                };
+                window.addEventListener("mousemove", moveProgress as any);
+                window.addEventListener("mouseup", handleMouseUp);
+              }}>
                 <Box h="100%" bg="purple.400" borderRadius="md" w={`${(progress / (duration || 1)) * 100}%`} />
               </Box>
 
