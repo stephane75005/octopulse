@@ -15,7 +15,7 @@ export default function Home() {
       <Flex
         w='100%'
         h='100%'
-        bgImage="url('images/forme-abstrait5.jpg')"   // ✅ image de fond
+        bgImage="url('images/forme-abstrait3.jpg')"   // ✅ image de fond
         bgSize="cover"                        // couvre tout le conteneur
         bgPosition="center"                    // centre l'image
         bgRepeat="no-repeat"                   // ne pas répéter
