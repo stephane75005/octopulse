@@ -77,7 +77,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
 
 export default function CreerUnePlaylistPage() {
   const router = useRouter();
-  const toast = useToast(); // 🔹 useToast pour notification
+  const toast = useToast();
   const [playlistName, setPlaylistName] = useState("");
   const [selectedAlbums, setSelectedAlbums] = useState<number[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -86,7 +86,7 @@ export default function CreerUnePlaylistPage() {
   const [currentlyPlayingIndex, setCurrentlyPlayingIndex] = useState<number | null>(null);
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [lastPlaylistsCount, setLastPlaylistsCount] = useState(0); // 🔹 pour suivre les ajouts
+  const [lastPlaylistsCount, setLastPlaylistsCount] = useState(0);
 
   const toggleAlbum = (albumId: number) => {
     setSelectedAlbums((prev) =>
@@ -170,7 +170,6 @@ export default function CreerUnePlaylistPage() {
     };
   }, [currentlyPlayingIndex, currentTrackIndex, playlists]);
 
-  // 🔹 Notification 3 sec après la création d'une playlist
   useEffect(() => {
     if (playlists.length > lastPlaylistsCount) {
       const timeout = setTimeout(() => {
@@ -191,19 +190,24 @@ export default function CreerUnePlaylistPage() {
 
   return (
     <Box bg="#121212" minH="100vh" p={6}>
+      {/* 🔹 Bouton retour modifié */}
       <Flex align="center" mb={6} gap={2}>
         <IconButton
           aria-label="Retour Home"
           icon={<ChevronLeftIcon />}
-          colorScheme="purple"
+          bg="#ae29b8"
+          color="white"
+          _hover={{ bg: "#9822a1" }}
+          _active={{ bg: "#821c8a" }}
           size="sm"
           onClick={() => router.push("/")}
         />
-         <Text fontSize="2xl" fontWeight="bold" color="white">
+        <Text fontSize="2xl" fontWeight="bold" color="white">
           Créer une playlist
         </Text>
       </Flex>
 
+      {/* Le reste du code reste inchangé */}
       <Input
         placeholder="Nom de la playlist"
         mb={6}

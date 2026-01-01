@@ -47,8 +47,11 @@ export default function LibrairiePage() {
         <IconButton
           aria-label="Retour Home"
           icon={<FiChevronLeft />}
-          colorScheme="purple"
           size="sm"
+          bg="#ae29b8"
+          color="white"
+          _hover={{ bg: "#9822a1" }}
+          _active={{ bg: "#821c8a" }}
           onClick={() => router.push("/")}
         />
         <Text fontSize="2xl" fontWeight="bold" color="white">
@@ -81,7 +84,9 @@ export default function LibrairiePage() {
       <Flex mb={8} gap={4} flexWrap="wrap">
         <Select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as "artiste" | "album" | "genre")}
+          onChange={(e) =>
+            setSortBy(e.target.value as "artiste" | "album" | "genre")
+          }
           size="sm"
           bg="#1E1D1D"
           color="white"

@@ -7,7 +7,7 @@
 
 const Login = () => {
   return (
-    <Flex direction='row-reverse' mt='2rem' mr='4rem' alignItems="center">
+    <Flex direction='row-reverse' mt='2rem' mr='0rem' alignItems="center">
       <Box ml='3'>
         <Text color='white' fontWeight='bold'>
           Stéphane Aboukrat

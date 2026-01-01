@@ -7,7 +7,7 @@ import { Album } from "@/app/data/mesalbums";
 interface Props {
   album: Album;
   variant?: "horizontal" | "vertical";
-  onPlay?: (albumId: number) => void;
+  onPlay?: (album: Album) => void; // <-- envoie l'album entier
   children?: ReactNode; // overlay ou autres éléments
 }
 
@@ -26,37 +26,35 @@ const formatTime = (t: number) => {
 };
 
 // === Equalizer 3 bandes placé en haut à gauche ===
-const EqualizerBars: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => {
-  return (
-    <Flex
-      position="absolute"
-      top="5px"     // en haut
-      left="5px"    // à gauche
-      direction="row"
-      gap="2px"
-      align="flex-end"
-      h="25px"
-      w="20px"
-    >
-      {[0, 1, 2].map((i) => (
-        <Box
-          key={i}
-          w="4px"
-          bg="#853e8a"
-          borderRadius="2px"
-          animation={isPlaying ? `bounce 0.6s ${i * 0.1}s infinite alternate` : "none"}
-        />
-      ))}
-      <style jsx>{`
-        @keyframes bounce {
-          0% { height: 4px; }
-          50% { height: 20px; }
-          100% { height: 4px; }
-        }
-      `}</style>
-    </Flex>
-  );
-};
+const EqualizerBars: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
+  <Flex
+    position="absolute"
+    top="5px"
+    left="5px"
+    direction="row"
+    gap="2px"
+    align="flex-end"
+    h="25px"
+    w="20px"
+  >
+    {[0, 1, 2].map((i) => (
+      <Box
+        key={i}
+        w="4px"
+        bg="#853e8a"
+        borderRadius="2px"
+        animation={isPlaying ? `bounce 0.6s ${i * 0.1}s infinite alternate` : "none"}
+      />
+    ))}
+    <style jsx>{`
+      @keyframes bounce {
+        0% { height: 4px; }
+        50% { height: 20px; }
+        100% { height: 4px; }
+      }
+    `}</style>
+  </Flex>
+);
 
 const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, children }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -96,7 +94,7 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, chi
         await audio.play();
         setIsPlaying(true);
         activeAudio = { ref: audio, setPlaying: setIsPlaying };
-        onPlay?.(album.id);
+        onPlay?.(album); // <-- envoie l'album entier
       } else {
         audio.pause();
         setIsPlaying(false);
@@ -179,12 +177,8 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, chi
             </Badge>
           )}
         </Text>
-        <Text color="white" fontSize="sm">
-          {album.artiste}
-        </Text>
-        <Text color="white" fontSize="xs">
-          {formatTime(currentTime)} / {album.duree}
-        </Text>
+        <Text color="white" fontSize="sm">{album.artiste}</Text>
+        <Text color="white" fontSize="xs">{formatTime(currentTime)} / {album.duree}</Text>
 
         {duration > 0 && (
           <Box h="4px" bg="gray.600" mt="1" borderRadius="2px">
@@ -192,9 +186,7 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, chi
           </Box>
         )}
 
-        <Text color="gray" fontSize="xs">
-          {album.genre} • {album.annee}
-        </Text>
+        <Text color="gray" fontSize="xs">{album.genre} • {album.annee}</Text>
       </Box>
 
       <audio ref={audioRef} src={album.audioSrc} />

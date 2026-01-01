@@ -35,7 +35,10 @@ export default function FavorisPage() {
         <IconButton
           aria-label="Retour Home"
           icon={<FiChevronLeft />}
-          colorScheme="purple"
+          bg="#ae29b8"
+          color="white"
+          _hover={{ bg: "#9822a1" }}
+          _active={{ bg: "#821c8a" }}
           size="sm"
           onClick={() => router.push("/")}
         />

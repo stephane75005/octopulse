@@ -4,7 +4,7 @@ import React from "react";
 import { Box, Flex, Text, IconButton, Divider, useDisclosure } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import { FiMenu, FiHome, FiSearch, FiMusic, FiPlus, FiHeart, FiX } from "react-icons/fi";
-import { TbMicrophone2 } from "react-icons/tb"; // 👈 nouvel import
+import { TbMicrophone2 } from "react-icons/tb";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
@@ -23,9 +23,9 @@ const Sidebar: React.FC = () => {
     { icon: FiHome, label: "Accueil", path: "/" },
     { icon: FiSearch, label: "Recherche", path: "/Recherche" },
     { icon: FiMusic, label: "Ma librairie", path: "/MaLibrairie" },
-    { icon: TbMicrophone2, label: "Karaoké", path: "/Karaoke" }, // 🎤 icône micro
+    { icon: TbMicrophone2, label: "Karaoké", path: "/Karaoke" },
     { icon: FiPlus, label: "Créer une playlist", path: "/CreerUnePlaylist" },
-    { icon: FiHeart, label: "Mes albums favoris", path: "/MesAlbumsFavoris" },
+    { icon: FiHeart, label: "Mes favoris", path: "/MesAlbumsFavoris" },
   ];
 
   return (
@@ -46,7 +46,7 @@ const Sidebar: React.FC = () => {
         p={0}
         alignItems="center"
         justifyContent="center"
-        _hover={{ bg: "gray.700", borderRadius: "md" }}
+        _hover={{ bg: "070211", borderRadius: "md" }}
       />
 
       {/* Overlay mobile */}
@@ -70,12 +70,12 @@ const Sidebar: React.FC = () => {
         top="0"
         left="0"
         bottom="0"
-        width={{ base: "full", md: "250px" }}
-        bg="gray.800"
+        width={{ base: "full", md: "230px" }} // ✅ largeur arrondie à 230px
+        bg="#280b46ff"
         p={4}
         zIndex="150"
         display={{ base: isOpen ? "block" : "none", lg: "block" }}
-        transition="transform 0.3s ease"
+        transition="transform 0.3s ease, width 0.3s ease"
         transform={{ base: isOpen ? "translateX(0)" : "translateX(-100%)", lg: "translateX(0)" }}
       >
         <Box mt={20} display="flex" flexDirection="column" alignItems="center">
@@ -89,7 +89,7 @@ const Sidebar: React.FC = () => {
               style={{ display: "inline-block", filter: "drop-shadow(0 0 4px rgba(133,62,138,0.6))" }}
             >
               <Image
-                src="/images/logo.png"
+                src="/images/logo2.png"
                 alt="Logo"
                 width={60}
                 height={60}
@@ -114,9 +114,9 @@ const Sidebar: React.FC = () => {
                     px={3}
                     mb={index === 3 ? 20 : 4}
                     borderRadius="md"
-                    bg={isActive ? "gray.700" : "transparent"}
+                    bg={isActive ? "#070211" : "transparent"}
                     _hover={{
-                      bg: "gray.700",
+                      bg: "#120729",
                       "& svg": {
                         transform: "scale(1.2)",
                         filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",

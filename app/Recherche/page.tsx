@@ -58,7 +58,8 @@ export default function RecherchePage() {
       const timeout = setTimeout(() => {
         toast({
           title: "Favoris mis à jour",
-          description: "Les albums que vous avez aimés ont été ajoutés à vos favoris.",
+          description:
+            "Les albums que vous avez aimés ont été ajoutés à vos favoris.",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -80,7 +81,9 @@ export default function RecherchePage() {
         normalize(album.album).includes(value) ||
         normalize(album.titre).includes(value) ||
         normalize(album.genre).includes(value);
-      const matchFav = showFavoritesOnly ? favorites.includes(album.id) : true;
+      const matchFav = showFavoritesOnly
+        ? favorites.includes(album.id)
+        : true;
       return matchSearch && matchFav;
     });
   }, [search, favorites, showFavoritesOnly]);
@@ -92,8 +95,11 @@ export default function RecherchePage() {
         <IconButton
           aria-label="Retour Home"
           icon={<FiChevronLeft />}
-          colorScheme="purple"
           size="sm"
+          bg="#ae29b8"
+          color="white"
+          _hover={{ bg: "#9822a1" }}
+          _active={{ bg: "#821c8a" }}
           onClick={() => router.push("/")}
         />
         <Text fontSize="2xl" fontWeight="bold" color="white">
@@ -130,7 +136,13 @@ export default function RecherchePage() {
         color="white"
         border="1px solid #333"
         _hover={{ bg: showFavoritesOnly ? "red.700" : "#2A2A2A" }}
-        leftIcon={showFavoritesOnly ? <FaHeart color="white" /> : <FaRegHeart color="white" />}
+        leftIcon={
+          showFavoritesOnly ? (
+            <FaHeart color="white" />
+          ) : (
+            <FaRegHeart color="white" />
+          )
+        }
         onClick={() => setShowFavoritesOnly(prev => !prev)}
       >
         {showFavoritesOnly ? "Favoris uniquement" : "Afficher les favoris"}
@@ -149,13 +161,22 @@ export default function RecherchePage() {
                 <AlbumItem album={album} variant="vertical" />
                 <IconButton
                   aria-label="Favori"
-                  icon={isFavorite ? <FaHeart color="red" /> : <FaRegHeart color="white" />}
+                  icon={
+                    isFavorite ? (
+                      <FaHeart color="red" />
+                    ) : (
+                      <FaRegHeart color="white" />
+                    )
+                  }
                   size="sm"
                   position="absolute"
                   top="6px"
                   right="6px"
                   bg="rgba(0,0,0,0.65)"
-                  _hover={{ bg: "rgba(0,0,0,0.85)", transform: "scale(1.15)" }}
+                  _hover={{
+                    bg: "rgba(0,0,0,0.85)",
+                    transform: "scale(1.15)",
+                  }}
                   _active={{ transform: "scale(0.95)" }}
                   onClick={(e) => {
                     e.stopPropagation();

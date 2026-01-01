@@ -120,33 +120,6 @@ export default function KaraokePlayerPage() {
     };
   }, [isPlaying, isDragging, album]);
 
-  useEffect(() => {
-    if (isUserScrolling) return;
-    const currentLine = lineRefs.current[currentLyricIndex];
-    if (currentLine) {
-      currentLine.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [currentLyricIndex, isUserScrolling]);
-
-  useEffect(() => {
-    const container = lyricsContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      setIsUserScrolling(true);
-
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => setIsUserScrolling(false), 1000);
-    };
-
-    container.addEventListener("scroll", handleScroll);
-
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    };
-  }, []);
-
   const togglePlay = () => {
     if (!audioRef.current) return;
     if (!isPlaying) {
@@ -195,7 +168,16 @@ export default function KaraokePlayerPage() {
       {/* Contenu principal */}
       <Box position="relative" zIndex={1} p={6}>
         <Flex align="center" mb={6} gap={4}>
-          <IconButton aria-label="Retour" icon={<FiChevronLeft />} colorScheme="purple" size="sm" onClick={() => router.push("/Karaoke")} />
+          <IconButton
+            aria-label="Retour"
+            icon={<FiChevronLeft />}
+            bg="#ae29b8"
+            color="white"
+            _hover={{ bg: "#9822a1" }}
+            _active={{ bg: "#821c8a" }}
+            size="sm"
+            onClick={() => router.push("/Karaoke")}
+          />
           <Text fontSize="2xl" fontWeight="bold">Karaoke</Text>
         </Flex>
 
@@ -206,8 +188,17 @@ export default function KaraokePlayerPage() {
               <IconButton
                 aria-label={isPlaying ? "Pause" : "Play"}
                 icon={isPlaying ? <TbPlayerPause size={36} /> : <TbPlayerPlay size={36} />}
-                position="absolute" top="50%" left="50%" transform="translate(-50%, -50%)"
-                colorScheme="purple" borderRadius="full" size="lg" onClick={togglePlay} bg="rgba(0,0,0,0.6)"
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                bg="#ae29b8"
+                color="white"
+                _hover={{ bg: "#9822a1" }}
+                _active={{ bg: "#821c8a" }}
+                borderRadius="full"
+                size="lg"
+                onClick={togglePlay}
               />
             </Box>
 
@@ -236,7 +227,7 @@ export default function KaraokePlayerPage() {
                 window.addEventListener("mousemove", moveProgress as any);
                 window.addEventListener("mouseup", handleMouseUp);
               }}>
-                <Box h="100%" bg="purple.400" borderRadius="md" w={`${(progress / (duration || 1)) * 100}%`} />
+                <Box h="100%" bg="#ae29b8" borderRadius="md" w={`${(progress / (duration || 1)) * 100}%`} />
               </Box>
 
               <Flex justify="space-between" mt={1}>
@@ -248,7 +239,7 @@ export default function KaraokePlayerPage() {
                   {lyrics.map((line, i) => {
                     const isActiveLine = i === currentLyricIndex;
                     return (
-                      <Text key={i} ref={setLineRef(i)} fontSize={isActiveLine ? "lg" : "md"} fontWeight={isActiveLine ? "bold" : "normal"} whiteSpace="nowrap" style={{ color: isActiveLine ? "#9f7aea" : "white", transition: "color 0.2s" }}>
+                      <Text key={i} ref={setLineRef(i)} fontSize={isActiveLine ? "lg" : "md"} fontWeight={isActiveLine ? "bold" : "normal"} whiteSpace="nowrap" style={{ color: isActiveLine ? "#ae29b8" : "white", transition: "color 0.2s" }}>
                         {line.words.map((word, wIndex) => {
                           const audioTime = audioRef.current?.currentTime || 0;
                           const isCurrentWord = audioTime >= word.start && audioTime <= word.end;
