@@ -254,7 +254,7 @@ export const albumsData: Album[] = [
   artiste: "Superfunk",
   album: "Hold Up",
   titre: "Lucky Star",
-  genre: "French Touch / House",
+  genre: "House",
   annee: 2000,
   duree: "5:43",
   imageSrc: "/images/super-funk.jpg",

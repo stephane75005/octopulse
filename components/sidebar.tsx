@@ -70,7 +70,7 @@ const Sidebar: React.FC = () => {
         top="0"
         left="0"
         bottom="0"
-        width={{ base: "full", md: "230px" }} // ✅ largeur arrondie à 230px
+        width={{ base: "full", md: "230px" }}
         bg="#280b46ff"
         p={4}
         zIndex="150"
@@ -78,21 +78,20 @@ const Sidebar: React.FC = () => {
         transition="transform 0.3s ease, width 0.3s ease"
         transform={{ base: isOpen ? "translateX(0)" : "translateX(-100%)", lg: "translateX(0)" }}
       >
-        <Box mt={20} display="flex" flexDirection="column" alignItems="center">
+        <Flex mt={20} direction="column" align="center">
           {/* Logo */}
           <Link href="/">
             <Box
-              mb={12}
+              mb={6}
               _hover={{ transform: "scale(1.1)" }}
               transition="all 0.3s ease"
               animation="bounceLogo 5s infinite"
-              style={{ display: "inline-block", filter: "drop-shadow(0 0 4px rgba(133,62,138,0.6))" }}
             >
               <Image
-                src="/images/logo2.png"
+                src="/images/logo-octopulse.png"
                 alt="Logo"
-                width={60}
-                height={60}
+                width={85}
+                height={85}
                 style={{ objectFit: "contain" }}
               />
             </Box>
@@ -117,10 +116,7 @@ const Sidebar: React.FC = () => {
                     bg={isActive ? "#070211" : "transparent"}
                     _hover={{
                       bg: "#120729",
-                      "& svg": {
-                        transform: "scale(1.2)",
-                        filter: "drop-shadow(0 0 4px rgba(255,255,255,0.7))",
-                      },
+                      "& svg": { transform: "scale(1.2)" },
                     }}
                     transition="all 0.2s ease"
                   >
@@ -136,13 +132,13 @@ const Sidebar: React.FC = () => {
             })}
             <Divider my={10} borderColor="gray.600" />
           </Box>
-        </Box>
+        </Flex>
 
         {/* Animation keyframes */}
         <style jsx>{`
           @keyframes bounceLogo {
-            0%, 80%, 100% { transform: translateY(0); filter: drop-shadow(0 0 4px rgba(133,62,138,0.6)); }
-            40% { transform: translateY(-10px); filter: drop-shadow(0 0 8px rgba(133,62,138,0.9)); }
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
           }
         `}</style>
       </Box>
