@@ -88,10 +88,10 @@ const Sidebar: React.FC = () => {
               animation="bounceLogo 5s infinite"
             >
               <Image
-                src="/images/logo-octopulse.png"
+                src="/images/logo-octopulse-8.png"
                 alt="Logo"
-                width={85}
-                height={85}
+                width={120}
+                height={120}
                 style={{ objectFit: "contain" }}
               />
             </Box>
