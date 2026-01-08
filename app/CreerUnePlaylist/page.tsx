@@ -44,7 +44,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
         position="absolute"
         left={0}
         zIndex={10}
-        colorScheme="purple"
+        colorScheme="#ca3c76"
         size="sm"
       />
       <Flex
@@ -55,7 +55,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
         scrollSnapType="x mandatory"
         css={{
           "&::-webkit-scrollbar": { height: "6px" },
-          "&::-webkit-scrollbar-thumb": { background: "#853e8a", borderRadius: "3px" },
+          "&::-webkit-scrollbar-thumb": { background: "#ca3c76", borderRadius: "3px" },
         }}
         flex="1"
       >
@@ -68,7 +68,7 @@ const Carousel = ({ children }: { children: React.ReactNode }) => {
         position="absolute"
         right={0}
         zIndex={10}
-        colorScheme="purple"
+        colorScheme="#ca3c76"
         size="sm"
       />
     </Flex>
@@ -195,10 +195,10 @@ export default function CreerUnePlaylistPage() {
         <IconButton
           aria-label="Retour Home"
           icon={<ChevronLeftIcon />}
-          bg="#ae29b8"
+          bg="#ca3c76"
           color="white"
-          _hover={{ bg: "#9822a1" }}
-          _active={{ bg: "#821c8a" }}
+          _hover={{ bg: "#881c49ff" }}
+          _active={{ bg: "#ca3c76" }}
           size="sm"
           onClick={() => router.push("/")}
         />
@@ -216,7 +216,7 @@ export default function CreerUnePlaylistPage() {
         bg="#1E1D1D"
         color="white"
         border="1px solid #333"
-        _focus={{ borderColor: "#853e8a" }}
+        _focus={{ borderColor: "#ca3c76" }}
       />
 
       <Text color="gray.400" mb={4}>
@@ -229,7 +229,7 @@ export default function CreerUnePlaylistPage() {
             <Checkbox
               isChecked={selectedAlbums.includes(album.id)}
               onChange={() => toggleAlbum(album.id)}
-              colorScheme="purple"
+              colorScheme="#ca3c76"
             >
               <AlbumItem album={album} variant="horizontal" />
             </Checkbox>
@@ -254,7 +254,7 @@ export default function CreerUnePlaylistPage() {
       )}
 
       <Flex justify="flex-end" mb={6}>
-        <Button colorScheme="purple" size="md" isDisabled={!playlistName || selectedAlbums.length === 0} onClick={handleCreatePlaylist}>
+        <Button bg="pink.600" size="md" isDisabled={!playlistName || selectedAlbums.length === 0} onClick={handleCreatePlaylist}>
           Créer la playlist
         </Button>
       </Flex>

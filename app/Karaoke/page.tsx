@@ -53,10 +53,10 @@ export default function LibrairiePage() {
         <IconButton
           aria-label="Retour Home"
           icon={<FiChevronLeft />}
-          bg="#ae29b8"
+        bg="#ca3c76"
           color="white"
-          _hover={{ bg: "#9822a1" }}
-          _active={{ bg: "#821c8a" }}
+          _hover={{ bg: "#881c49ff" }}
+          _active={{ bg: "#ca3c76" }}
           size="sm"
           onClick={() => router.push("/")}
         />
@@ -80,8 +80,8 @@ export default function LibrairiePage() {
           pl="2.5rem"
           _placeholder={{ color: "gray.500" }}
           _focus={{
-            borderColor: "#ae29b8",
-            boxShadow: "0 0 0 1px #ae29b8",
+            borderColor: "#ca3c76",
+            boxShadow: "0 0 0 1px #ca3c76",
           }}
         />
       </InputGroup>

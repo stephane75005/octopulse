@@ -41,7 +41,7 @@ const EqualizerBars: React.FC<{ isPlaying: boolean }> = ({ isPlaying }) => (
       <Box
         key={i}
         w="4px"
-        bg="#853e8a"
+        bg="#ffff"
         borderRadius="2px"
         animation={isPlaying ? `bounce 0.6s ${i * 0.1}s infinite alternate` : "none"}
       />
@@ -106,7 +106,7 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, chi
     }
   };
 
-  const borderColor = isPlaying ? "#853e8a" : isPaused ? "red" : isHovered ? "gray" : "transparent";
+  const borderColor = isPlaying ? "#ca3c76" : isPaused ? "red" : isHovered ? "gray" : "transparent";
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
@@ -139,7 +139,7 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, chi
               : { base: "80px", md: "90px", lg: "100px" }
           }
           objectFit="cover"
-          borderRadius="8px"
+         
           transition="transform 0.2s ease"
           _hover={{ transform: "scale(1.1)" }}
         />
@@ -182,7 +182,7 @@ const AlbumItem: React.FC<Props> = ({ album, variant = "horizontal", onPlay, chi
 
         {duration > 0 && (
           <Box h="4px" bg="gray.600" mt="1" borderRadius="2px">
-            <Box h="100%" w={`${progress}%`} bg="#853e8a" />
+            <Box h="100%" w={`${progress}%`} bg="pink.600" />
           </Box>
         )}
 

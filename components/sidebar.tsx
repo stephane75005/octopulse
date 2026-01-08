@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
         left="0"
         bottom="0"
         width={{ base: "full", md: "230px" }}
-        bg="#280b46ff"
+        bg="#050d33ff"
         p={4}
         zIndex="150"
         display={{ base: isOpen ? "block" : "none", lg: "block" }}
@@ -113,9 +113,9 @@ const Sidebar: React.FC = () => {
                     px={3}
                     mb={index === 3 ? 20 : 4}
                     borderRadius="md"
-                    bg={isActive ? "#070211" : "transparent"}
+                    bg={isActive ? "#061661ff" : "transparent"}
                     _hover={{
-                      bg: "#120729",
+                      bg: "#04114bff",
                       "& svg": { transform: "scale(1.2)" },
                     }}
                     transition="all 0.2s ease"

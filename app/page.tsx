@@ -58,7 +58,7 @@ export default function Home() {
         left={0}
         w="100%"
         h="100%"
-        bgGradient="linear(to-b, #45206eff, #3c1c5e, #630e5aff, #3c1c5e, #30164fff)"
+        bgGradient="linear(to-b, #06195cff, #030c37ff)"
         bgSize="200% 200%"
         bgPosition="center"
         bgRepeat="no-repeat"

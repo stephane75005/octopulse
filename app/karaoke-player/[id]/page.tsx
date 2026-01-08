@@ -171,10 +171,10 @@ export default function KaraokePlayerPage() {
           <IconButton
             aria-label="Retour"
             icon={<FiChevronLeft />}
-            bg="#ae29b8"
-            color="white"
-            _hover={{ bg: "#9822a1" }}
-            _active={{ bg: "#821c8a" }}
+            bg="#ca3c76"
+          color="white"
+          _hover={{ bg: "#881c49ff" }}
+          _active={{ bg: "#ca3c76" }}
             size="sm"
             onClick={() => router.push("/Karaoke")}
           />
@@ -192,10 +192,10 @@ export default function KaraokePlayerPage() {
                 top="50%"
                 left="50%"
                 transform="translate(-50%, -50%)"
-                bg="#ae29b8"
-                color="white"
-                _hover={{ bg: "#9822a1" }}
-                _active={{ bg: "#821c8a" }}
+               bg="#ca3c76"
+               color="white"
+               _hover={{ bg: "#881c49ff" }}
+               _active={{ bg: "#ca3c76" }}
                 borderRadius="full"
                 size="lg"
                 onClick={togglePlay}
@@ -227,7 +227,7 @@ export default function KaraokePlayerPage() {
                 window.addEventListener("mousemove", moveProgress as any);
                 window.addEventListener("mouseup", handleMouseUp);
               }}>
-                <Box h="100%" bg="#ae29b8" borderRadius="md" w={`${(progress / (duration || 1)) * 100}%`} />
+                <Box h="100%" bg="#ca3c76" borderRadius="md" w={`${(progress / (duration || 1)) * 100}%`} />
               </Box>
 
               <Flex justify="space-between" mt={1}>
@@ -239,7 +239,7 @@ export default function KaraokePlayerPage() {
                   {lyrics.map((line, i) => {
                     const isActiveLine = i === currentLyricIndex;
                     return (
-                      <Text key={i} ref={setLineRef(i)} fontSize={isActiveLine ? "lg" : "md"} fontWeight={isActiveLine ? "bold" : "normal"} whiteSpace="nowrap" style={{ color: isActiveLine ? "#ae29b8" : "white", transition: "color 0.2s" }}>
+                      <Text key={i} ref={setLineRef(i)} fontSize={isActiveLine ? "lg" : "md"} fontWeight={isActiveLine ? "bold" : "normal"} whiteSpace="nowrap" style={{ color: isActiveLine ? "#ca3c76" : "white", transition: "color 0.2s" }}>
                         {line.words.map((word, wIndex) => {
                           const audioTime = audioRef.current?.currentTime || 0;
                           const isCurrentWord = audioTime >= word.start && audioTime <= word.end;
