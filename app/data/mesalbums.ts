@@ -119,7 +119,7 @@ export const albumsData: Album[] = [
     annee: 1979,
     duree: "4:23",
     imageSrc: "/images/serge-gainsbourg.jpg",
-    audioSrc: "/audio/havanes.mp3",
+    audioSrc: "/audio/serge-gainsbourg.mp3",
     plays: 107,
   },
         {
